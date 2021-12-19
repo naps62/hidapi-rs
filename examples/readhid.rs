@@ -8,9 +8,11 @@
 //! example will not work unless such an HID is plugged in to your system.
 //! Will update in the future to support all HIDs.
 
-extern crate hidapi;
+#[cfg(feature = "linux-static-rusb")]
+extern crate rusb;
 
-use hidapi::HidApi;
+extern crate hidapi_rusb;
+use hidapi_rusb::HidApi;
 
 fn main() {
     let api = HidApi::new().expect("Failed to create API instance");
