@@ -7,9 +7,12 @@
 //! Opens the first hid device it can find, and reads data in a blocking fashion
 //! from it in an endless loop.
 
-extern crate hidapi;
+#[cfg(feature = "linux-static-rusb")]
+extern crate rusb;
 
-use hidapi::{HidApi, HidError};
+extern crate hidapi_rusb;
+
+use hidapi_rusb::{HidApi, HidError};
 
 fn main() {
     fn run() -> Result<(), HidError> {
@@ -21,7 +24,11 @@ fn main() {
             .expect("No devices are available!")
             .clone();
 
-        println!("Opening device:\n VID: {:04x}, PID: {:04x}\n", device_info.vendor_id(), device_info.product_id());
+        println!(
+            "Opening device:\n VID: {:04x}, PID: {:04x}\n",
+            device_info.vendor_id(),
+            device_info.product_id()
+        );
 
         let device = device_info.open_device(&hidapi)?;
 

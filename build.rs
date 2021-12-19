@@ -196,8 +196,7 @@ fn compile_windows() {
     let linkage = env::var("CARGO_CFG_TARGET_FEATURE").unwrap_or(String::new());
 
     let mut cc = cc::Build::new();
-    cc
-        .file("etc/hidapi/windows/hid.c")
+    cc.file("etc/hidapi/windows/hid.c")
         .include("etc/hidapi/hidapi");
 
     if linkage.contains("crt-static") {

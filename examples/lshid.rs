@@ -6,9 +6,12 @@
 
 //! Prints out a list of HID devices
 
-extern crate hidapi;
+#[cfg(feature = "linux-static-rusb")]
+extern crate rusb;
 
-use hidapi::HidApi;
+extern crate hidapi_rusb;
+
+use hidapi_rusb::HidApi;
 
 fn main() {
     println!("Printing all available hid devices:");

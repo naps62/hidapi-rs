@@ -7,9 +7,12 @@ This file is part of hidapi-rs, based on hidapi_rust by Roland Ruckerbauer.
 //! This example shows the added possibility (after version 0.4.1),
 //! to move devices into a function / or closure with static lifetime bounds.
 
-extern crate hidapi;
+#[cfg(feature = "linux-static-rusb")]
+extern crate rusb;
 
-use hidapi::{HidApi, HidDevice};
+extern crate hidapi_rusb;
+
+use hidapi_rusb::{HidApi, HidDevice};
 use std::rc::Rc;
 
 fn main() {

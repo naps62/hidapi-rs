@@ -1,5 +1,5 @@
 [package]
-name = "hidapi"
+name = "hidapi-rusb"
 version = "1.3.0"
 authors = [
     "Roland Ruckerbauer <roland.rucky@gmail.com>",
@@ -8,16 +8,16 @@ authors = [
 	"mberndt123",
 	"niklasad1"
 ]
-repository = "https://github.com/ruabmbua/hidapi-rs"
-description = "Rust-y wrapper around hidapi"
+repository = "https://github.com/joshieDo/hidapi-rs"
+description = "Rust-y wrapper around hidapi with rusb backend."
 license = "MIT"
 keywords = ["hid", "api", "usb","binding", "wrapper"]
 build = "build.rs"
-links = "hidapi"
-documentation = "https://docs.rs/hidapi"
+links = "hidapi-rusb"
+documentation = "https://docs.rs/hidapi-rusb"
 
 [features]
-default = ["linux-static-libusb", "illumos-static-libusb"]
+default = ["linux-static-rusb"]
 linux-static-libusb = []
 linux-static-hidraw = []
 linux-static-rusb = ["rusb"]

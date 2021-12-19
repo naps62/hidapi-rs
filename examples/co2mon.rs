@@ -8,9 +8,11 @@
 //! Opens a KIT MT 8057 CO2 detector and reads data from it. This
 //! example will not work unless such an HID is plugged in to your system.
 
-extern crate hidapi;
+#[cfg(feature = "linux-static-rusb")]
+extern crate rusb;
 
-use hidapi::{HidApi, HidDevice};
+extern crate hidapi_rusb;
+use hidapi_rusb::{HidApi, HidDevice};
 use std::thread::sleep;
 use std::time::Duration;
 
