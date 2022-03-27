@@ -221,6 +221,29 @@ impl HidApi {
         }
     }
 
+    /// Open a HID device using `libusb_wrap_sys_device`. Useful for Android.
+    ///
+    /// ### Arguments
+    ///
+    /// * `sys_dev`: Platform-specific file descriptor that can be recognised by libusb.
+    /// * `interface_num`: USB interface number of the device to be used as HID interface. Pass -1
+    /// to select first HID interface of the device.
+    pub fn wrap_sys_device(&self, sys_dev: i32, interface_num: i32) -> HidResult<HidDevice> {
+        let device = unsafe { ffi::hid_libusb_wrap_sys_device(sys_dev as _, interface_num) };
+
+        if device.is_null() {
+            match self.check_error() {
+                Ok(err) => Err(err),
+                Err(e) => Err(e),
+            }
+        } else {
+            Ok(HidDevice {
+                _hid_device: device,
+                _lock: ManuallyDrop::new(self._lock.clone()),
+            })
+        }
+    }
+
     /// Get the last non-device specific error, which happened in the underlying hidapi C library.
     /// To get the last device specific error, use [`HidDevice::check_error`].
     ///
