@@ -73,6 +73,13 @@ impl HidApiLock {
         {
             // Initialize the HID and prevent other HIDs from being created
             unsafe {
+                // This option must be set for Android Termux
+                #[cfg(target_os = "android")]
+                rusb::ffi::libusb_set_option(
+                    std::ptr::null_mut(),
+                    rusb::ffi::constants::LIBUSB_OPTION_WEAK_AUTHORITY,
+                );
+
                 if ffi::hid_init() == -1 {
                     HID_API_LOCK.store(false, Ordering::SeqCst);
                     return Err(HidError::InitializationError);
