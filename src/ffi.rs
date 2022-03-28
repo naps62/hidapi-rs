@@ -35,6 +35,7 @@ extern "C" {
         serial_number: *const wchar_t,
     ) -> *mut HidDevice;
     pub fn hid_open_path(path: *const c_char) -> *mut HidDevice;
+    pub fn hid_libusb_wrap_sys_device(sys_dev: *mut c_int, interface_num: c_int) -> *mut HidDevice;
     pub fn hid_write(device: *mut HidDevice, data: *const c_uchar, length: size_t) -> c_int;
     pub fn hid_read_timeout(
         device: *mut HidDevice,

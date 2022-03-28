@@ -73,6 +73,13 @@ impl HidApiLock {
         {
             // Initialize the HID and prevent other HIDs from being created
             unsafe {
+                // This option must be set for Android Termux
+                #[cfg(target_os = "android")]
+                rusb::ffi::libusb_set_option(
+                    std::ptr::null_mut(),
+                    rusb::ffi::constants::LIBUSB_OPTION_WEAK_AUTHORITY,
+                );
+
                 if ffi::hid_init() == -1 {
                     HID_API_LOCK.store(false, Ordering::SeqCst);
                     return Err(HidError::InitializationError);
@@ -207,6 +214,29 @@ impl HidApi {
     /// Alternatively a platform-specific path name can be used (eg: /dev/hidraw0 on Linux).
     pub fn open_path(&self, device_path: &CStr) -> HidResult<HidDevice> {
         let device = unsafe { ffi::hid_open_path(device_path.as_ptr()) };
+
+        if device.is_null() {
+            match self.check_error() {
+                Ok(err) => Err(err),
+                Err(e) => Err(e),
+            }
+        } else {
+            Ok(HidDevice {
+                _hid_device: device,
+                _lock: ManuallyDrop::new(self._lock.clone()),
+            })
+        }
+    }
+
+    /// Open a HID device using `libusb_wrap_sys_device`. Useful for Android.
+    ///
+    /// ### Arguments
+    ///
+    /// * `sys_dev`: Platform-specific file descriptor that can be recognised by libusb.
+    /// * `interface_num`: USB interface number of the device to be used as HID interface. Pass -1
+    /// to select first HID interface of the device.
+    pub fn wrap_sys_device(&self, sys_dev: i32, interface_num: i32) -> HidResult<HidDevice> {
+        let device = unsafe { ffi::hid_libusb_wrap_sys_device(sys_dev as _, interface_num) };
 
         if device.is_null() {
             match self.check_error() {
