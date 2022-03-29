@@ -235,6 +235,7 @@ impl HidApi {
     /// * `sys_dev`: Platform-specific file descriptor that can be recognised by libusb.
     /// * `interface_num`: USB interface number of the device to be used as HID interface. Pass -1
     /// to select first HID interface of the device.
+    #[cfg(unix)]
     pub fn wrap_sys_device(&self, sys_dev: i32, interface_num: i32) -> HidResult<HidDevice> {
         let device = unsafe { ffi::hid_libusb_wrap_sys_device(sys_dev as _, interface_num) };
 
