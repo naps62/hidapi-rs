@@ -38,8 +38,7 @@
 // Allow use of deprecated items, we defined ourselfes...
 #![allow(deprecated)]
 
-#[cfg(target_os = "linux")]
-#[cfg(feature = "linux-static-rusb")]
+#[cfg(all(feature = "linux-static-rusb", target_os = "linux"))]
 extern crate rusb;
 
 extern crate libc;
